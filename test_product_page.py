@@ -2,6 +2,7 @@ import time
 
 import pytest
 
+from .pages.basket_page import BasketPage
 from .pages.product_page import ProductPage
 from .pages.main_page import MainPage
 
@@ -60,3 +61,17 @@ def test_message_disappeared_after_adding_product_to_basket(browser):
     product_page.add_to_basket()
     page.solve_quiz_and_get_code()
     product_page.should_disappeared_success_message()
+
+
+def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
+    linkProductPage = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
+
+    product_page = ProductPage(browser, linkProductPage)
+    basket_page = BasketPage(browser, browser.current_url)
+
+    product_page.open()
+    product_page.should_be_basket_link()
+    product_page.go_to_basket_page()
+
+    basket_page.should_not_be_product_in_basket()
+    basket_page.should_be_massage_empty_basket()
